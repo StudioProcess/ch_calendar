@@ -1,4 +1,4 @@
-Custom Calendar Inlays
+## Custom A4/A5 Calendar Inlays using LaTeX
 
 Based on: [https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex](https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex)
 

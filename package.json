@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "preinstall": "brew tap caskroom/cask; brew cask install basictex; sudo tlmgr install tabularx booktabs multirow helvetic;",
+    "preinstall": "brew install python; brew tap caskroom/cask; brew cask install basictex; sudo tlmgr install tabularx booktabs multirow helvetic;",
     "start": "python script.py > out/2019.tex; pdflatex -output-directory=out out/2019.tex "
   },
   "author": "Process <contact@process.studio> (https://process.studio)",

@@ -1,4 +1,4 @@
-[[https://github.com/StudioProcess/ch_calendar/blob/master/img/_0515.jpg]]
+![Printed Inlays (2018)](img/_0515.jpg)
 
 ## Custom A4/A5 Calendar Inlays using LaTeX
 

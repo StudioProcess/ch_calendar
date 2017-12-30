@@ -4,10 +4,10 @@ Based on: [https://tex.stackexchange.com/questions/220980/organiser-refills-inla
 
 Created on macOS High Sierra 10.13.2
 
-Dependencies (install with `npm install` once you have Homebrew):
+**Dependencies** (install with `npm install` once you have Homebrew):
 * [Homebrew](https://brew.sh/)
 * Python 2.7
-* Basictex
-* Tex Live Packages: tabularx, booktabs, multirow, helvetic
+* [Basictex](http://www.tug.org/mactex/morepackages.html)
+* Tex Live Packages: `tabularx`, `booktabs`, `multirow`, `helvetic`
 
 Calendar configured for 2019. See top of `script.py`.

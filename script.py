@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # from: https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex
 import calendar
 import sys
@@ -10,7 +12,7 @@ months = {0: 'January',1: 'February',2: 'March',3: 'April',4: 'May',5: 'June',6:
 ########## CUSTOMISATIONS ##########
 #
 ## Year
-year=2019
+year=int(sys.argv[1]) if sys.argv[1] else 2019
 ## Morning starttime
 starttime=8
 ## Evening time

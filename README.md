@@ -10,6 +10,6 @@ Created on macOS High Sierra 10.13.2 / Updated on macOS Monterey 12.6
 * [Homebrew](https://brew.sh/)
 * Python 3.10
 * [Basictex](http://www.tug.org/mactex/morepackages.html)
-* Tex Live Packages: `tabularx`, `booktabs`, `multirow`, `helvetic`
+* Tex Live Packages: `booktabs`, `multirow`, `helvetic`
 
-Calendar configured for 2019. See top of `script.py`.
+Run `npm start <year>` to generate calender for a specific year.

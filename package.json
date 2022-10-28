@@ -1,10 +1,10 @@
 {
   "name": "ch_calendar",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "",
   "scripts": {
-    "preinstall": "brew install python3; brew tap caskroom/cask; brew cask install basictex; sudo tlmgr install tabularx booktabs multirow helvetic;",
-    "start": "python script.py > out/2019.tex; pdflatex -output-directory=out out/2019.tex "
+    "preinstall": "brew install python3; brew install basictex; eval \"$(/usr/libexec/path_helper)\"; sudo tlmgr install booktabs multirow helvetic;",
+    "start": "./year.sh"
   },
   "author": "Process <contact@process.studio> (https://process.studio)",
   "license": "AGPL-3.0"

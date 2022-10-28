@@ -4,11 +4,11 @@
 
 Based on: [https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex](https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex)
 
-Created on macOS High Sierra 10.13.2
+Created on macOS High Sierra 10.13.2 / Updated on macOS Monterey 12.6
 
 **Dependencies** (install with `npm install` once you have Homebrew):
 * [Homebrew](https://brew.sh/)
-* Python 2.7
+* Python 3.10
 * [Basictex](http://www.tug.org/mactex/morepackages.html)
 * Tex Live Packages: `tabularx`, `booktabs`, `multirow`, `helvetic`
 

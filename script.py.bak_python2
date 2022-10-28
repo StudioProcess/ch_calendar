@@ -38,11 +38,11 @@ extrarowheight="3.25pt"
 #Get mondays
 #e.g.: [[  7.   7.], [ 14.  14.], [ 21.  21.], [ 28.  28.], [  4.   4.], [ 11.  11.], ... ]
 k=0
-for month in range(12):
+for month in xrange(12):
     month+=1 # month: 1..12
     monthcal = calendar.monthcalendar(year,month) #
     # print month, monthcal
-    for weekinmonth in range(len(monthcal)):
+    for weekinmonth in xrange(len(monthcal)):
         if monthcal[weekinmonth][0] == 0: pass
         else:
             if k < weeks:
@@ -52,7 +52,7 @@ for month in range(12):
 
 # Get monthrange
 j=0
-for i in range(weeks):
+for i in xrange(weeks):
     monthrange = calendar.monthrange(year,j+1)[1]
     if i == 0: mondays[i,1] = monthrange
     elif mondays[i,0] > mondays[i-1,0]: mondays[i,1] = monthrange
@@ -257,15 +257,15 @@ head = head.replace("pyrulewidth",  thickrulewidth)
 head = head.replace("pymidrulewidth", midrulewidth)
 head = head.replace("pythinrulewidth", thinrulewidth)
 
-print(head)
+print head
 
 week=1
 if mondays[0,0] != 1:week+=1
 k=0
-for i in range(len(mondays[:,0])):
+for i in xrange(len(mondays[:,0])):
     table_temp = table
     trigger=0
-    for j in range(7):
+    for j in xrange(7):
         date = mondays[i,0] + j
         if date==1 and i!=0:
             k+=1
@@ -297,7 +297,8 @@ for i in range(len(mondays[:,0])):
 
     table_temp = table_temp.replace("pyweek", str(week).replace('.0',''))
     table_temp = table_temp.replace("pyyear", str(year).replace('.0',''))
-    print(table_temp)
+    print table_temp
     week+=1
 
-print(foot)
+
+print foot

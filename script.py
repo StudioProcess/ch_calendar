@@ -1,10 +1,9 @@
 # from: https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex
-import numpy as np
 import calendar
 import sys
 
 weeks = 52
-mondays = np.zeros((weeks,2)) # [ [ 0.  0.], ... ]
+mondays = [ [0, 0] for _ in range(weeks) ]; # [ [ 0, 0], ... ]
 days = {0: 'pymond', 1: 'pytue', 2: 'pywed', 3: 'pythur', 4: 'pyfr', 5: 'pysat', 6: 'pysun'}
 months = {0: 'January',1: 'February',2: 'March',3: 'April',4: 'May',5: 'June',6: 'July',7: 'August',8: 'September',9: 'October',10: 'November',11: 'December', 12: 'January'}
 
@@ -36,7 +35,7 @@ extrarowheight="3.25pt"
 
 
 #Get mondays
-#e.g.: [[  7.   7.], [ 14.  14.], [ 21.  21.], [ 28.  28.], [  4.   4.], [ 11.  11.], ... ]
+#e.g.: [ [7, 7], [14, 14], [21, 21], [28, 28], [4, 4], [11, 11], ... ]
 k=0
 for month in range(12):
     month+=1 # month: 1..12
@@ -46,7 +45,7 @@ for month in range(12):
         if monthcal[weekinmonth][0] == 0: pass
         else:
             if k < weeks:
-                mondays[k] = monthcal[weekinmonth][0]
+                mondays[k] = [ monthcal[weekinmonth][0] ] * 2
             k+=1
 
 
@@ -54,14 +53,14 @@ for month in range(12):
 j=0
 for i in range(weeks):
     monthrange = calendar.monthrange(year,j+1)[1]
-    if i == 0: mondays[i,1] = monthrange
-    elif mondays[i,0] > mondays[i-1,0]: mondays[i,1] = monthrange
+    if i == 0: mondays[i][1] = monthrange
+    elif mondays[i][0] > mondays[i-1][0]: mondays[i][1] = monthrange
     else:
-        mondays[i,1] = calendar.monthrange(year,j+2)[1]
+        mondays[i][1] = calendar.monthrange(year,j+2)[1]
         j+=1
 
-# print mondays
-# sys.exit(0)
+# print(mondays)
+# exit()
 
 
 head = r'''
@@ -260,22 +259,22 @@ head = head.replace("pythinrulewidth", thinrulewidth)
 print(head)
 
 week=1
-if mondays[0,0] != 1:week+=1
+if mondays[0][0] != 1: week += 1
 k=0
-for i in range(len(mondays[:,0])):
+for i in range(len(mondays)):
     table_temp = table
     trigger=0
     for j in range(7):
-        date = mondays[i,0] + j
+        date = mondays[i][0] + j
         if date==1 and i!=0:
             k+=1
             trigger=1
         else:pass
-        #if k==6 or k==7:
-#        print date,'/', mondays[i,1], months[k], j, k, trigger
-#        raw_input()
-        if date > mondays[i,1]:
-            date = (mondays[i,0] + j)%mondays[i,1]
+        # if k==6 or k==7:
+        #     print(date,'/', mondays[i][1], months[k], j, k, trigger)
+        #     raw_input()
+        if date > mondays[i][1]:
+            date = (mondays[i][0] + j)%mondays[i][1]
             if j > 2:
                 if k<12 and trigger == 0:
                     k+=1
@@ -289,7 +288,7 @@ for i in range(len(mondays[:,0])):
         else:
             if j == 2:
                 table_temp = table_temp.replace('pymonthleft', months[k])
-#                trigger = 0
+                # trigger = 0
             elif j == 6:
                 table_temp = table_temp.replace('pymonthright', months[k])
 

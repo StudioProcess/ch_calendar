@@ -1,9 +1,12 @@
 #!/usr/bin/env sh
 
+OUT=test
+
 if [[ -z $1 ]]; then
     echo "Usage: $0 <year>"
     exit 1
 fi
 
-python script.py $1 > out/$1.tex
-pdflatex -output-directory=out out/$1.tex
+mkdir -p $OUT
+python script.py $1 > $OUT/$1.tex
+pdflatex -output-directory=$OUT $OUT/$1.tex

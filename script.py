@@ -3,11 +3,11 @@
 # TODO:
 # calendar should start on the week that contains 1 january
 # calendar should end on the week that contains 31 december
-# week numbers should be correct
 
 # from: https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex
 import calendar
 import sys
+import datetime
 
 ########## CUSTOMIZATIONS ##########
 
@@ -67,17 +67,18 @@ days = {
     6: 'pysun'
 }
 
-#Collect all mondays in a list
+# Collect all mondays in a list
 mondays = []
 
 for month in range( 1, 13 ):
+   for week in calendar.monthcalendar(year, month): # Returns a matrix representing a month’s calendar. Each row represents a week; days outside of the month are represented by zeros. Each week begins with Monday
+        if not week[0] == 0: # Ignore Weeks that doesn't start in the current month
+            mondays.append( [week[0], 0] )
+            
+# print(mondays)
+# exit()
 
-   for week in calendar.monthcalendar(year,month):
-
-      if not week[0] == 0:
-         mondays.append( [week[0], 0] )
-
-# If year doesn't end with a friday, append January to months
+# If year doesn't end with a Sunday, append January to months
 if calendar.monthcalendar(year, 12)[-1][-1] == 0:
     months.append( months[0] )
 
@@ -300,14 +301,13 @@ head = head.replace("pythinrulewidth",  thinrulewidth  )
 
 print(head)
 
-week_num = 1
-if mondays[0][0] != 1: week_num += 1
-
 currentmonth = 0
+
 for week in range(Nweeks):
 
    table_temp = table
    trigger = 0
+   date = 0
 
    for weekday in range(7):
 
@@ -316,6 +316,7 @@ for week in range(Nweeks):
       # If it's monday 1 st, increase currentmonth unless it's January 1 st.
       if date == 1 and not (mondays[0][0] == 1 and currentmonth == 0):
          currentmonth += 1
+         if currentmonth == 12: year += 1
          trigger = 1
 
       # If next month
@@ -325,6 +326,7 @@ for week in range(Nweeks):
 
          if trigger == 0:
             currentmonth += 1
+            if currentmonth == 12: year += 1
             trigger = 1
 
          # Print right page
@@ -346,11 +348,13 @@ for week in range(Nweeks):
             table_temp = table_temp.replace('pymonthright', months[currentmonth])
 
       table_temp = table_temp.replace(days[weekday], str(date))
-
-   table_temp = table_temp.replace("pyweek", str(week_num))
-   table_temp = table_temp.replace("pyyear", str(year))
+   
+   # get correct first week number/year, based on current date (last day of the week)
+   isocal = datetime.date(year, currentmonth%12 + 1, date).isocalendar()
+   
+   table_temp = table_temp.replace("pyweek", str(isocal.week))
+   table_temp = table_temp.replace("pyyear", str(isocal.year))
    
    print(table_temp)
-   week_num += 1
 
 print(foot)

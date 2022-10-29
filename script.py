@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-# TODO:
-# calendar should start on the week that contains 1 january
-# calendar should end on the week that contains 31 december
-
-# from: https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex
+# Adapted from: https://tex.stackexchange.com/questions/220980/organiser-refills-inlays-using-latex
 import calendar
 import sys
 import datetime
@@ -15,49 +11,46 @@ import datetime
 year = int(sys.argv[1]) if len(sys.argv) > 1 else 2023
 
 # Labels
-months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+month_names = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
 #months = [calendar.LocaleTextCalendar().formatmonthname(year,i,1).split(' ')[0] for i in range(1,13)]
 
 labels = {
-   'label_week':       'Week',
-   'label_monday':     'Monday',
-   'label_tuesday':    'Tuesday',
-   'label_wednesday':  'Wednesday',
-   'label_thursday':   'Thursday',
-   'label_friday':     'Friday',
-   'label_saturday':   'Saturday',
-   'label_sunday':     'Sunday',
+    'label_week':       'Week',
+    'label_monday':     'Monday',
+    'label_tuesday':    'Tuesday',
+    'label_wednesday':  'Wednesday',
+    'label_thursday':   'Thursday',
+    'label_friday':     'Friday',
+    'label_saturday':   'Saturday',
+    'label_sunday':     'Sunday',
 }
 
 ## Morning starttime
-starttime="8"
+starttime = "8"
 
 ## Evening time
-stoptime="20"
+stoptime = "20"
 
 ## Starttime sunday
-# Min \starttime+1
-# Max \stoptime-2
-
-sundaybegin="14"
+sundaybegin = "14"
 
 ## Rule width thick
-thickrulewidth="2pt"
+thickrulewidth = "2pt"
 
 ## Midrule width
-midrulewidth="0.67pt"
+midrulewidth = "0.67pt"
 
 ## Thinrule width
-thinrulewidth=".335pt"
+thinrulewidth = ".335pt"
 
 ## Extra space
-extrarowheight="3.25pt"
+extrarowheight = "3.25pt"
 
 #
 ####################################
 #
 
-days = {
+day_vars = {
     0: 'pymond',
     1: 'pytue',
     2: 'pywed',
@@ -66,42 +59,6 @@ days = {
     5: 'pysat',
     6: 'pysun'
 }
-
-# Collect all mondays in a list
-mondays = []
-
-for month in range( 1, 13 ):
-   for week in calendar.monthcalendar(year, month): # Returns a matrix representing a month’s calendar. Each row represents a week; days outside of the month are represented by zeros. Each week begins with Monday
-        if not week[0] == 0: # Ignore Weeks that doesn't start in the current month
-            mondays.append( [week[0], 0] )
-            
-# print(mondays)
-# exit()
-
-# If year doesn't end with a Sunday, append January to months
-if calendar.monthcalendar(year, 12)[-1][-1] == 0:
-    months.append( months[0] )
-
-Nweeks = len(mondays)
-
-# Add length of corresponding month to each monday
-month = 1
-for week in range( Nweeks ):
-
-   Ndaysinmonth = calendar.monthrange( year, month )[1]
-
-   # First week
-   if week == 0:
-      mondays[week][1] = Ndaysinmonth
-
-   # Increasing day in month => same month
-   elif mondays[week][0] > mondays[week-1][0]:
-      mondays[week][1] = Ndaysinmonth
-
-   # Next month
-   else:
-      mondays[week][1] = calendar.monthrange( year, month+1 )[1]
-      month+=1
 
 head = r'''
    \documentclass[%
@@ -285,9 +242,6 @@ table = r'''
    % \footer % disable `––– year –––` footer
    \clearpage'''
 
-for key in labels:
-    table = table.replace(key, labels[key])
-
 foot = r'''\end{document}'''
 
 head = head.replace("pyyear",           str(year)      )
@@ -297,64 +251,36 @@ head = head.replace("pysundaybegin",    sundaybegin    )
 head = head.replace("pyextrarowheight", extrarowheight )
 head = head.replace("pyrulewidth",      thickrulewidth )
 head = head.replace("pymidrulewidth",   midrulewidth   )
-head = head.replace("pythinrulewidth",  thinrulewidth  )
+head = head.replace("pythinrulewidth",  thinrulewidth  ) 
 
+for key in labels:
+    table = table.replace(key, labels[key])
+
+# Create list of weeks, each week is a list of 7 datetime.date object
+cal = calendar.Calendar()
+months = cal.yeardatescalendar(year, 12)[0]; # each month row contains between 4 and 6 weeks
+weeks = []
+for m in months:
+    for w in m:
+        # months can contain the same weeks; add week only if it's different from the previous
+        if len(weeks) == 0 or w[0] != weeks[-1][0]:
+            weeks.append(w)
+
+
+# Output Tex
 print(head)
-
-currentmonth = 0
-
-for week in range(Nweeks):
-
-   table_temp = table
-   trigger = 0
-   date = 0
-
-   for weekday in range(7):
-
-      date = mondays[week][0] + weekday
-
-      # If it's monday 1 st, increase currentmonth unless it's January 1 st.
-      if date == 1 and not (mondays[0][0] == 1 and currentmonth == 0):
-         currentmonth += 1
-         if currentmonth == 12: year += 1
-         trigger = 1
-
-      # If next month
-      if date > mondays[week][1]:
-
-         date = date - mondays[week][1]
-
-         if trigger == 0:
-            currentmonth += 1
-            if currentmonth == 12: year += 1
-            trigger = 1
-
-         # Print right page
-         if weekday > 2:
-            table_temp = table_temp.replace('pymonthright', months[currentmonth])
-
-         # Print left page
-         else:
-            table_temp = table_temp.replace('pymonthleft', months[currentmonth])
-
-      else:
-
-         # Print left page
-         if weekday == 2:
-            table_temp = table_temp.replace('pymonthleft', months[currentmonth])
-
-         # Print right page
-         elif weekday == 6:
-            table_temp = table_temp.replace('pymonthright', months[currentmonth])
-
-      table_temp = table_temp.replace(days[weekday], str(date))
-   
-   # get correct first week number/year, based on current date (last day of the week)
-   isocal = datetime.date(year, currentmonth%12 + 1, date).isocalendar()
-   
-   table_temp = table_temp.replace("pyweek", str(isocal.week))
-   table_temp = table_temp.replace("pyyear", str(isocal.year))
-   
-   print(table_temp)
-
+for week in weeks:
+    table_temp = table
+    # set day numbers
+    for weekday, date in enumerate(week):
+        # print(weekday, date)
+        table_temp = table_temp.replace( day_vars[weekday], str(date.day) )    
+    # set month (left + right)
+    table_temp = table_temp.replace('pymonthleft', month_names[week[2].month-1])  # Month from Wednesday
+    table_temp = table_temp.replace('pymonthright', month_names[week[6].month-1]) # Month from Sunday
+    # set week number and year
+    isocal = week[0].isocalendar() # get iso cal for first day of the week
+    table_temp = table_temp.replace("pyweek", str(isocal.week))
+    table_temp = table_temp.replace("pyyear", str(isocal.year))
+    print(table_temp)
 print(foot)
